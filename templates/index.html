@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MusicRack</title>
+<!-- Loading Bootstrap -->
+<link href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+<!-- Loading Flat UI -->
+<link href="{{ url_for('static', filename='css/flat-ui.css') }}" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+<![endif]-->
+
+<style type="text/css">
+</style>
+</head>
+<body>
+<div class="container">
+<div id="page_login" class="login" style="display:none;">
+	<div class="login-screen">
+		<div class="login-icon">
+			<img src="{{ url_for('static', filename='images/icons/Infinity-Loop@2x.png') }}" alt="Welcome to Mail App">
+			<h4>Welcome to <small>MusicRack</small></h4>
+		</div>
+
+		<div class="login-form">
+			<div class="control-group">
+			  <input type="text" class="login-field" value="" placeholder="Enter your email" id="login-name">
+			  <label class="login-field-icon fui-user" for="login-name"></label>
+			</div>
+
+			<div class="control-group">
+			  <input type="password" class="login-field" value="" placeholder="Password" id="login-pass">
+			  <label class="login-field-icon fui-lock" for="login-pass"></label>
+			</div>
+
+			<a id="login_button" class="btn btn-primary btn-large btn-block" href="#">Login</a>
+			<a class="login-link" href="#">Lost your password?</a>
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- Load JS here for greater good =============================-->
+<script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.ui.touch-punch.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-select.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-switch.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flatui-checkbox.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flatui-radio.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.tagsinput.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.placeholder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.stacktable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/application.js') }}"></script>
+<script>
+$(function() {
+	$.ajax({
+		url: "/session/isloggedin",
+		dataType: "json",
+		contentType: 'application/json; charset=utf-8',
+		success: function(msg) {
+			if (msg.success && msg.isloggedin) {
+				$("#page_login").hide();
+			} else {
+				$("#page_login").fadeIn({duration:250, easing:"easeInQuad"});
+			}
+		},
+		error: function(msg) {
+			console.log("error");
+		}
+	});
+	$("#login_button").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "/session/login",
+			dataType: "json",
+			data: JSON.stringify({
+				"email": $("#login-name").val(),
+				"password": $("#login-pass").val()
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				if (msg.success) {
+					$(".login-form > .control-group").removeClass("error");
+					$(".login-form > .control-group").addClass("success");
+					$("#page_login").fadeOut({duration:250, easing:"easeInQuad"});
+				} else {
+					$(".login-form > .control-group").removeClass("success");
+					$(".login-form > .control-group").addClass("error");
+				}
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

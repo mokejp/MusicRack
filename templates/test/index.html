@@ -1,0 +1,193 @@
+<html>
+<head>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.3.js') }}"></script>
+<script type="text/javascript">
+$(function() {
+	$("#session_login_button").click(function() {
+		console.log("click:session_login_button");
+		$.ajax({
+			type: "POST",
+			url: "/session/login",
+			dataType: "json",
+			data: JSON.stringify({
+				"email": $("#session_login_email").val(),
+				"password": $("#session_login_password").val()
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#session_login_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#session_logout_button").click(function() {
+		console.log("click:session_logout_button");
+		$.ajax({
+			type: "POST",
+			url: "/session/logout",
+			dataType: "json",
+			data: null,
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#session_logout_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#files_list_button").click(function() {
+		console.log("click:files_list_button");
+		$.ajax({
+			type: "GET",
+			url: "/files/list/" + $("#files_list_id").val(),
+			dataType: "json",
+			data: null,
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#files_list_response").html(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#files_directory_create_button").click(function() {
+		console.log("click:files_directory_create_button");
+		$.ajax({
+			type: "POST",
+			url: "/files/directory/create",
+			dataType: "json",
+			data: JSON.stringify({
+				"parent": $("#files_directory_create_id").val(),
+				"name": $("#files_directory_create_name").val()
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#files_directory_create_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#files_directory_delete_button").click(function() {
+		console.log("click:files_directory_delete_button");
+		$.ajax({
+			type: "POST",
+			url: "/files/directory/delete",
+			dataType: "json",
+			data: JSON.stringify({
+				"id": $("#files_directory_delete_id").val()
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#files_directory_delete_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#files_file_upload_button").click(function() {
+		console.log("click:files_file_upload_button");
+		var fd = new FormData();
+		fd.append("file", $("#files_file_upload_file").get(0).files.item(0));
+		fd.append("parent", $("#files_file_upload_id").val());
+		$.ajax({
+			type: "POST",
+			url: "/files/file/upload",
+			dataType: "json",
+			data: fd,
+			contentType: false,
+			processData: false,
+			success: function(msg) {
+				$("#files_file_upload_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+	
+	$("#files_file_delete_button").click(function() {
+		console.log("click:files_file_delete_button");
+		$.ajax({
+			type: "POST",
+			url: "/files/file/delete",
+			dataType: "json",
+			data: JSON.stringify({
+				"id": $("#files_file_delete_id").val()
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function(msg) {
+				$("#files_file_delete_response").text(JSON.stringify(msg));
+			},
+			error: function(msg) {
+				console.log("error");
+			}
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div>
+<h2>session/login</h2>
+<label>email:<input id="session_login_email" type="text" /></label>
+<label>password:<input id="session_login_password" type="text" /></label>
+<button id="session_login_button">TEST</button>
+<pre id="session_login_response"></pre>
+</div>
+
+<div>
+<h2>session/logout</h2>
+<button id="session_logout_button">TEST</button>
+<pre id="session_logout_response"></pre>
+</div>
+
+<div>
+<h2>files/list</h2>
+<label>parent_id:<input id="files_list_id" type="text" /></label>
+<button id="files_list_button">TEST</button>
+<pre id="files_list_response"></pre>
+</div>
+
+<div>
+<h2>files/directory/create</h2>
+<label>parent_id:<input id="files_directory_create_id" type="text" /></label>
+<label>name<input id="files_directory_create_name" type="text" /></label>
+<button id="files_directory_create_button">TEST</button>
+<pre id="files_directory_create_response"></pre>
+</div>
+
+<div>
+<h2>files/directory/delete</h2>
+<label>id:<input id="files_directory_delete_id" type="text" /></label>
+<button id="files_directory_delete_button">TEST</button>
+<pre id="files_directory_delete_response"></pre>
+</div>
+
+<div>
+<h2>files/file/upload</h2>
+<label>parent_id:<input id="files_file_upload_id" type="text" /></label>
+<label>file:<input id="files_file_upload_file" type="file" /></label>
+<button id="files_file_upload_button">TEST</button>
+<pre id="files_file_upload_response"></pre>
+</div>
+
+<div>
+<h2>files/file/delete</h2>
+<label>id:<input id="files_file_delete_id" type="text" /></label>
+<button id="files_file_delete_button">TEST</button>
+<pre id="files_file_delete_response"></pre>
+</div>
+</body>
+</html>
